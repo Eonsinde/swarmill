@@ -1,8 +1,9 @@
 import { create } from "zustand"
 
 export type ModalType = 
-    "authModal" |
-    "uploadModal";
+    "authModal"     |
+    "uploadModal"   |
+    "deleteFile";
 
 type ModalStoreType = {
     isOpen: boolean
@@ -17,7 +18,7 @@ const useModalStore = create<ModalStoreType>()((set) => ({
     type: null,
     data: undefined,
     onOpen: (type, modalData) => set(({ isOpen: true, type, data: modalData })),
-    onClose: () => set(({ isOpen: false, type: null, data: undefined }))
+    onClose: () => set(({ isOpen: false, type: null }))
 }))
 
 export default useModalStore

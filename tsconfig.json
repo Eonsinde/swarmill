@@ -27,6 +27,7 @@
       "@/actions/*": ["./src/actions/*"],
       "@/types/*": ["./src/types/*"],
       "@/trpc/*": ["./src/trpc/*"],
+      "@/app/*": ["./src/app/*"],
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],

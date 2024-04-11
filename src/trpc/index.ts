@@ -1,5 +1,6 @@
 // holds the appRouter and our procedures(routes)
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server"
+import { z } from "zod"
 import { TRPCError } from "@trpc/server"
 import { db } from "@/lib/db"
 import { privateProcedure, publicProcedure, router } from "./trpc"
@@ -41,6 +42,40 @@ export const appRouter = router({
                 ownerId: kindleUserId
             }
         });
+    }),
+    getFile: privateProcedure.input(z.object({ key: z.string() })).mutation(async ({ ctx, input }) => {
+        const { kindleUserId } = ctx;
+
+        const existingFile = db.file.findFirst({
+            where: {
+                key: input.key,
+                ownerId: kindleUserId
+            }
+        });
+
+        if (!existingFile) throw new TRPCError({ code: "NOT_FOUND", message: "File not found" });
+
+        return existingFile;
+    }),
+    deleteFile: privateProcedure.input(z.object({ id: z.string() })).mutation(async ({ ctx, input }) => {
+        const { kindleUserId } = ctx;
+
+        const file = await db.file.findFirst({
+            where: {
+                id: input.id,
+                ownerId: kindleUserId
+            }
+        });
+
+        if (!file) throw new TRPCError({ code: "NOT_FOUND", message: "File not found" });
+
+        await db.file.delete({
+            where: {
+                id: input.id
+            }
+        });
+
+        return file;
     })
 });
 

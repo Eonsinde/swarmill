@@ -1,13 +1,16 @@
 "use client"
 import Link from "next/link"
 import { format } from "date-fns"
+import useModalStore from "@/hooks/use-modal-store"
 import { Ghost, MessageSquare, Plus, Trash } from "lucide-react"
-import { trpc } from "../../app/_trpc/client"
+import { trpc } from "@/app/_trpc/client"
 import { Skeleton } from "@/components/ui/skeleton"
 import UploadButton from "./upload-button"
 import { Button } from "../ui/button"
 
 const Dashboard = () => {
+    const { onOpen } = useModalStore();
+
     const { data: files, isLoading } = trpc.getUserFiles.useQuery();
 
     return (
@@ -18,7 +21,7 @@ const Dashboard = () => {
             </div>
             {/* display all files */}
             {files && files?.length > 0 ? (
-                <div className="mt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 divide-y divide-border">
+                <div className="mt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 divide-y divide-accent">
                     {files.sort(
                         (a, b) => 
                             new Date(a.createdAt).getTime() -
@@ -56,6 +59,7 @@ const Dashboard = () => {
                                     className="w-full"
                                     size="sm"
                                     variant="destructive"
+                                    onClick={() => onOpen("deleteFile", { id: file.id, name: file.name })}
                                 >
                                     <Trash className="h-4 w-4" />
                                 </Button>
