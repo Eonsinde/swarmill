@@ -1,11 +1,17 @@
+"use client"
 import Link from "next/link"
 import Image from "next/image"
-import { LoginLink, RegisterLink } from "@kinde-oss/kinde-auth-nextjs/server"
-import { buttonVariants } from "@/components/ui/button"
-import MaxWidthWrapper from "@/components/max-width-wrapper"
+import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs"
+import { LogoutLink } from "@kinde-oss/kinde-auth-nextjs/components"
+import useModalStore from "@/hooks/use-modal-store"
 import { ArrowRight } from "lucide-react"
+import { Button, buttonVariants } from "@/components/ui/button"
+import MaxWidthWrapper from "@/components/max-width-wrapper"
 
 const Navbar = () => {
+    const { onOpen } = useModalStore();
+    const { isLoading, user } = useKindeBrowserClient();
+
     return (
         <nav className="h-14 sticky top-0 inset-x-0 z-30 w-full border-b border-border backdrop-blur-lg transition-all">
             <MaxWidthWrapper>
@@ -35,21 +41,14 @@ const Navbar = () => {
                             >
                                 Pricing
                             </Link>
-                            <LoginLink
-                                className={buttonVariants({
-                                    variant: "ghost",
-                                    size: "sm"
-                                })}
-                            >
-                                Sign In
-                            </LoginLink>
-                            <RegisterLink
+                            <Button
                                 className={buttonVariants({
                                     size: "sm"
                                 })}
+                                onClick={() => onOpen("authModal")}
                             >
                                 Get Started <ArrowRight className="ml-1.5 h-5 w-5" />
-                            </RegisterLink>
+                            </Button>
                         </>
                     </div>
                 </div>

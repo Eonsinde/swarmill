@@ -45,7 +45,7 @@ const Home = () => {
                         <div className="mt-16 sm:mt-24 flow-root">
                             <div className="bg-gray-900/5 -m-2 lg:-m-4 p-2 lg:p-4 ring-1 ring-inset ring-gray-900/10 rounded-xl">
                                 <Image
-                                    className="bg-white p-2 sm:p-8 md:p-20 shadow-2xl ring-1 ring-gray-900/10 rounded-md"
+                                    className="bg-background p-2 sm:p-8 md:p-20 shadow-2xl ring-1 ring-gray-900/10 rounded-md"
                                     src="/images/dashboard-preview.jpg"
                                     alt="product preview"
                                     width={1364}
@@ -98,7 +98,7 @@ const Home = () => {
                             <span className="text-sm font-medium text-rose-600">Step 2</span>
                             <span className="text-xl font-semibold">Upload your PDF file</span>
                             <span className="mt-2 text-secondary-foreground">
-                                We&apos;ll process your file an make it ready for you to converse with.
+                                We&apos;ll process your file and make it ready for you to converse with.
                             </span>
                         </div>
                     </li>
@@ -116,7 +116,7 @@ const Home = () => {
                     <div className="mt-16 sm:mt-24 flow-root">
                         <div className="bg-gray-900/5 -m-2 lg:-m-4 p-2 lg:p-4 ring-1 ring-inset ring-gray-900/10 rounded-xl">
                             <Image
-                                className="bg-white p-2 sm:p-8 md:p-20 shadow-2xl ring-1 ring-gray-900/10 rounded-md"
+                                className="bg-background p-2 sm:p-8 md:p-20 shadow-2xl ring-1 ring-gray-900/10 rounded-md"
                                 src="/images/file-upload-preview.jpg"
                                 alt="uploading preview"
                                 width={1419}

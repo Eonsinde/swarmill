@@ -26,6 +26,7 @@
       "@/providers/*": ["./src/providers/*"],
       "@/actions/*": ["./src/actions/*"],
       "@/types/*": ["./src/types/*"],
+      "@/trpc/*": ["./src/trpc/*"],
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
