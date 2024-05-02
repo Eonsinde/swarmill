@@ -3,16 +3,27 @@ import { useMemo, useState } from "react"
 import { Document, Page, pdfjs } from "react-pdf"
 import * as z from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { cn } from "@/lib/utils"
 import { useResizeDetector } from "react-resize-detector"
 import { useForm } from "react-hook-form"
 import { useToast } from "@/components/ui/use-toast"
-import { ChevronDown, ChevronUp, Loader2 } from "lucide-react"
+import SimpleBar from "simplebar-react"
+import { ChevronDown, ChevronUp, Loader2, RotateCw, Search } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import PDFFullScreen from "@/components/dashboard/pdf-full-screen"
 
 import "react-pdf/dist/Page/AnnotationLayer.css"
 import "react-pdf/dist/Page/TextLayer.css"
-import { cn } from "@/lib/utils"
+import "simplebar-react/dist/simplebar.min.css"
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`
 
@@ -25,6 +36,9 @@ const PDFRenderer = ({ url }: Props) => {
 
     const [numPages, setNumPages] = useState<number>();
     const [currentPage, setCurrentPage] = useState<number>(1);
+    // transforms
+    const [pageScale, setPageScale] = useState<number>(1);
+    const [pageRotation, setPageRotation] = useState<number>(0);
 
     const CustomPageValidator = useMemo(() => 
         z.object({
@@ -93,34 +107,78 @@ const PDFRenderer = ({ url }: Props) => {
                         <ChevronUp className="h-4 w-4" />
                     </Button>
                 </div>
+                <div className="space-x-2">
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <Button
+                                className="gap-1.5"
+                                aria-label="zoom"
+                                variant="ghost"
+                            >
+                                <Search className="h-4 w-4" />
+                                {pageScale * 100}%
+                                <ChevronDown className="h-3 w-3 opacity-50" />
+                            </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent>
+                            <DropdownMenuItem onSelect={() => setPageScale(1)}>
+                                100%
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onSelect={() => setPageScale(1.5)}>
+                                150%
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onSelect={() => setPageScale(2)}>
+                                200%
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onSelect={() => setPageScale(2.5)}>
+                                250%
+                            </DropdownMenuItem>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+                    <Button
+                        onClick={() => setPageRotation(prev => prev + 90)}
+                        variant="ghost"
+                        aria-label="rotate by 90Degs"
+                    >
+                        <RotateCw className="h-4 w-4" />
+                    </Button>
+                   <PDFFullScreen />
+                </div>
             </div>
             <div className="flex-1 max-h-screen w-full">
-                <div
-                    ref={ref}
+                <SimpleBar
+                    className="max-h-[calc(100vh-10rem)]"
+                    autoHide={false}
                 >
-                    <Document
-                        className="max-h-full"
-                        file={url}
-                        loading={
-                            <div className="flex justify-center items-center">
-                                <Loader2 className="my-24 h-6 w-6 text-muted-foreground animate-spin" />
-                            </div>
-                        }
-                        onLoadError={() => {
-                            toast({
-                                title: "Issues loading PDF",
-                                description: "Please try again or reload page",
-                                variant: "destructive"
-                            })
-                        }}
-                        onLoadSuccess={onDocumentLoadSuccess}
+                    <div
+                        ref={ref}
                     >
-                        <Page
-                            width={width ?? 1}
-                            pageNumber={currentPage}
-                        />
-                    </Document>
-                </div>
+                        <Document
+                            className="max-h-full"
+                            file={url}
+                            loading={
+                                <div className="flex justify-center items-center">
+                                    <Loader2 className="my-24 h-6 w-6 text-muted-foreground animate-spin" />
+                                </div>
+                            }
+                            onLoadError={() => {
+                                toast({
+                                    title: "Issues loading PDF",
+                                    description: "Please try again or reload page",
+                                    variant: "destructive"
+                                })
+                            }}
+                            onLoadSuccess={onDocumentLoadSuccess}
+                        >
+                            <Page
+                                width={width ?? 1}
+                                pageNumber={currentPage}
+                                scale={pageScale}
+                                rotate={pageRotation}
+                            />
+                        </Document>
+                    </div>
+                </SimpleBar>
             </div>
         </div>
     )
