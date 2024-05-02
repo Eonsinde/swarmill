@@ -222,6 +222,7 @@ const FileUpload = forwardRef<HTMLInputElement, Props>(({
                             <Progress
                                 className="h-1 w-full text-rose-600"
                                 value={uploadProgress}
+                                indicatorColor={(uploadProgress === 100) ? "bg-green-500" : ""}
                             />
                         </div>
                         {uploadProgress === 100 && (

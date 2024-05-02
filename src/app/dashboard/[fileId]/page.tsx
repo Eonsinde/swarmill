@@ -46,8 +46,7 @@ const FileDetails = async ({ params: { fileId } }: Props) => {
                 {/* left side */}
                 <div className="flex-1 xl:flex">
                     <div className="py-6 px-4 md:px-6 lg:pl-8 xl:pl-6 xl:flex-1">
-                        <PDFRenderer />
-                        File Details {fileId}
+                        <PDFRenderer url={file.url} />
                     </div>
                 </div>
                 {/* right side */}

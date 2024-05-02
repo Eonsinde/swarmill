@@ -23,4 +23,4 @@ const Redirect = ({
     return <></>
 }
  
-export default Redirect;
+export default Redirect
