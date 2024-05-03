@@ -129,9 +129,6 @@ const FileUpload = forwardRef<HTMLInputElement, Props>(({
         ...dropzoneOptions
     });
 
-    console.log("file-upload:", isUploading, isUploadError);
-
-
     // styling
     const dropZoneClassName = useMemo(
         () =>

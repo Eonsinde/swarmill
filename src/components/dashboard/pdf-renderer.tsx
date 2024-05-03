@@ -15,10 +15,10 @@ import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import PdfFullScreenOptimized from "@/components/dashboard/pdf-full-screen-optimized"
+import PDFOptimizedFullScreen from "@/components/dashboard/pdf-optimized-full-screen"
 import PDFFullScreen from "@/components/dashboard/pdf-full-screen"
 
 import "react-pdf/dist/Page/AnnotationLayer.css"
@@ -36,9 +36,12 @@ const PDFRenderer = ({ url }: Props) => {
 
     const [numPages, setNumPages] = useState<number>();
     const [currentPage, setCurrentPage] = useState<number>(1);
+    const [renderedScale, setRenderedScale] = useState<number | null>(null);
     // transforms
     const [pageScale, setPageScale] = useState<number>(1);
     const [pageRotation, setPageRotation] = useState<number>(0);
+
+    const isLoading = useMemo(() => renderedScale !== pageScale, [renderedScale, pageScale]);
 
     const CustomPageValidator = useMemo(() => 
         z.object({
@@ -55,12 +58,11 @@ const PDFRenderer = ({ url }: Props) => {
 
     const { ref, width } = useResizeDetector();
 
-    const onDocumentLoadSuccess = ({ numPages }: { numPages: number }) => {
-        setNumPages(numPages)
+    const onDocumentLoadSuccess = ({ numPages: pNumPages }: { numPages: number }) => {
+        setNumPages(pNumPages)
     }
 
     const onSubmit = ({ page }: z.infer<typeof CustomPageValidator>) => {
-        console.log("Imm working")
         setCurrentPage(Number(page))
         setValue("page", String(page))
     }
@@ -75,6 +77,7 @@ const PDFRenderer = ({ url }: Props) => {
                         disabled={currentPage <= 1}
                         onClick={() => {
                             setCurrentPage(prev => (prev - 1 > 1) ? prev - 1 : 1)
+                            setValue("page", String(currentPage - 1))
                         }}
                     >
                         <ChevronDown className="h-4 w-4" />
@@ -102,6 +105,7 @@ const PDFRenderer = ({ url }: Props) => {
                         disabled={!numPages || currentPage >= numPages!}
                         onClick={() => {
                             setCurrentPage(prev => (prev + 1 > numPages!) ? numPages! : prev + 1)
+                            setValue("page", String(currentPage + 1))
                         }}
                     >
                         <ChevronUp className="h-4 w-4" />
@@ -142,7 +146,10 @@ const PDFRenderer = ({ url }: Props) => {
                     >
                         <RotateCw className="h-4 w-4" />
                     </Button>
-                   <PDFFullScreen />
+                    <PDFOptimizedFullScreen
+                        url={url}
+                        activePageIndex={currentPage-1}
+                    />
                 </div>
             </div>
             <div className="flex-1 max-h-screen w-full">
@@ -150,9 +157,7 @@ const PDFRenderer = ({ url }: Props) => {
                     className="max-h-[calc(100vh-10rem)]"
                     autoHide={false}
                 >
-                    <div
-                        ref={ref}
-                    >
+                    <div ref={ref}>
                         <Document
                             className="max-h-full"
                             file={url}
@@ -170,11 +175,28 @@ const PDFRenderer = ({ url }: Props) => {
                             }}
                             onLoadSuccess={onDocumentLoadSuccess}
                         >
+                            {isLoading && renderedScale ? (
+                                <Page
+                                    key={`@${renderedScale}`}
+                                    width={width ?? 1}
+                                    pageNumber={currentPage}
+                                    scale={renderedScale}
+                                    rotate={pageRotation}
+                                />
+                            ) : null}
                             <Page
+                                key={`@${pageScale}`}
+                                className={cn(isLoading ? "hidden" : "")}
                                 width={width ?? 1}
                                 pageNumber={currentPage}
                                 scale={pageScale}
                                 rotate={pageRotation}
+                                loading={
+                                    <div className="flex justify-center items-center">
+                                        <Loader2 className="my-24 h-6 w-6 text-muted-foreground animate-spin" />
+                                    </div>
+                                }
+                                onRenderSuccess={() => setRenderedScale(pageScale)}
                             />
                         </Document>
                     </div>
