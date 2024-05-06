@@ -4,6 +4,7 @@ import { z } from "zod"
 import { TRPCError } from "@trpc/server"
 import { db } from "@/lib/db"
 import { privateProcedure, publicProcedure, router } from "./trpc"
+import { QUERY_LIMIT } from "../config/constants"
 
 export const appRouter = router({
     authCallback: publicProcedure.query(async () => {
@@ -43,6 +44,18 @@ export const appRouter = router({
             }
         });
     }),
+    getFileUploadStatus: privateProcedure.input(z.object({ id: z.string() })).query(async ({ ctx, input }) => {
+        const file = await db.file.findFirst({
+            where: {
+                id: input.id,
+                ownerId: ctx.kindleUserId
+            }
+        });
+
+        if (!file) return { status: "PENDING" as const }
+
+        return { status: file.uploadStatus }
+    }),
     getFile: privateProcedure.input(z.object({ key: z.string() })).mutation(async ({ ctx, input }) => {
         const { kindleUserId } = ctx;
 
@@ -76,7 +89,61 @@ export const appRouter = router({
         });
 
         return file;
-    })
+    }),
+    getFileMessages: privateProcedure
+        .input(
+            z.object({
+                limit: z.number().min(1).max(100).nullish(),
+                cursor: z.string().nullish(),
+                fileId: z.string()
+            })
+        )
+        .query(async ({ ctx, input }) => {
+            const { kindleUserId } = ctx;
+            const { fileId, cursor } = input;
+
+            const limit = input.limit ?? QUERY_LIMIT;
+
+            const file = await db.file.findFirst({
+                where: {
+                    id: fileId,
+                    ownerId: kindleUserId
+                }
+            });
+
+            if (!file) throw new TRPCError({ code: "NOT_FOUND", message: "File not found" });
+
+            const messages = await db.message.findMany({
+                where: {
+                    fileId
+                },
+                orderBy: {
+                    createdAt: "desc"
+                },
+                take: limit + 1,
+                cursor: cursor ? { id: cursor } : undefined,
+                select: {
+                    id: true,
+                    text: true,
+                    isUserMessage: true,
+                    createdAt: true
+                }
+            });
+
+            console.log("trpc::getFileMessages::", messages);
+
+            let nextCursor: typeof cursor | undefined = undefined;
+
+            if (messages.length > limit) {
+                const nextItem = messages.pop();
+                nextCursor = nextItem?.id;
+            }
+
+            return {
+                messages,
+                nextCursor
+            }
+        })
 });
 
 export type AppRouter = typeof appRouter

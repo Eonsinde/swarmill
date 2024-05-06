@@ -26,6 +26,7 @@ model Profile {
   stripeCurrentPeriodEnd DateTime? @map(name: "strie_current_period_end")
 
   files File[]
+  messages Message[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -48,6 +49,24 @@ model File {
 
   ownerId String
   owner Profile @relation(fields: [ownerId], references: [kindleUserId], onDelete: Cascade)
+
+  messages Message[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Message {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  text String
+
+  isUserMessage Boolean
+
+  userId String
+  user Profile @relation(fields: [userId], references: [kindleUserId], onDelete: Cascade)
+
+  fileId String @db.ObjectId
+  file File @relation(fields: [fileId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

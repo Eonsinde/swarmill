@@ -3,7 +3,7 @@ import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server"
 import { db } from "@/lib/db"
 import Redirect from "@/components/redirect"
 import PDFRenderer from "@/components/dashboard/pdf-renderer"
-import ChatWrapper from "@/components/dashboard/chat-wrapper"
+import ChatWrapper from "@/components/dashboard/chat/chat-wrapper"
 
 type Props = {
     params: {
@@ -51,7 +51,7 @@ const FileDetails = async ({ params: { fileId } }: Props) => {
                 </div>
                 {/* right side */}
                 <div className="shrink-0 flex-[0.75] lg:w-96 border-t border-border lg:border-[1px] lg:border-t-0">
-                    <ChatWrapper />
+                    <ChatWrapper fileId={file.id} />
                 </div>
             </div>
         </div>

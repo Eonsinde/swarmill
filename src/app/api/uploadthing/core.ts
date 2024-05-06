@@ -1,7 +1,11 @@
-import { db } from "@/lib/db";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server"
 import { createUploadthing, type FileRouter } from "uploadthing/next"
 import { UploadThingError } from "uploadthing/server"
+import { PDFLoader } from "langchain/document_loaders/fs/pdf"
+import { OpenAIEmbeddings } from "@langchain/openai"
+import { PineconeStore } from "@langchain/pinecone"
+import { db } from "@/lib/db"
+import { pc } from "@/lib/pinecone"
  
 const f = createUploadthing();
  
@@ -22,7 +26,7 @@ export const ourFileRouter = {
             return { userId: kindleUser.id };
         })
         .onUploadComplete(async ({ metadata, file }) => {
-            const createFile = await db.file.create({
+            const createdFile = await db.file.create({
                 data: {
                     name: file.name,
                     key: file.key,
@@ -30,7 +34,52 @@ export const ourFileRouter = {
                     ownerId: metadata.userId,
                     uploadStatus: "PROCESSING"
                 }
-            })
+            });
+
+            try {
+                const response = await fetch(file.url);
+                const pdfBlob = await response.blob();
+
+                const loader = new PDFLoader(pdfBlob);
+                const docs = await loader.load();
+                
+                // TODO: check num of pages against user's plan
+                const numPages = docs.length;
+
+                // vectorize and index the entire document
+                const pineconeIndex = pc.Index(process.env.PINECONE_INDEX!);
+                const embeddings = new OpenAIEmbeddings({
+                    openAIApiKey: process.env.OPENAI_API_KEY
+                });
+
+                await PineconeStore.fromDocuments(
+                    docs,
+                    embeddings,
+                    {
+                        pineconeIndex,
+                        namespace: createdFile.id
+                    }
+                );
+
+                // finally set new file's upload status to SUCSESS
+                await db.file.update({
+                    data: {
+                        uploadStatus: "SUCCESS"
+                    },
+                    where: {
+                        id: createdFile.id
+                    }
+                });
+            } catch (err: any) {
+                await db.file.update({
+                    data: {
+                        uploadStatus: "FAILED"
+                    },
+                    where: {
+                        id: createdFile.id
+                    }
+                });
+            }
         })
 } satisfies FileRouter
  

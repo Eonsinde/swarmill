@@ -5,8 +5,8 @@ import useModalStore from "@/hooks/use-modal-store"
 import { Ghost, MessageSquare, Plus, Trash } from "lucide-react"
 import { trpc } from "@/app/_trpc/client"
 import { Skeleton } from "@/components/ui/skeleton"
-import UploadButton from "./upload-button"
-import { Button } from "../ui/button"
+import UploadButton from "@/components/dashboard/upload-button"
+import { Button } from "@/components/ui/button"
 
 const Dashboard = () => {
     const { onOpen } = useModalStore();
@@ -21,7 +21,7 @@ const Dashboard = () => {
             </div>
             {/* display all files */}
             {files && files?.length > 0 ? (
-                <div className="mt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 divide-y divide-accent">
+                <div className="mt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     {files.sort(
                         (a, b) => 
                             new Date(a.createdAt).getTime() -
@@ -29,7 +29,7 @@ const Dashboard = () => {
                     ).map((file) => (
                         <div
                             key={file.id}
-                            className="col-span-1 divide-y divide-accent rounded-lg hover:shadow-lg transition"
+                            className="col-span-1 border-y border-accent divide-y divide-accent rounded-lg hover:shadow-xl transition"
                         >
                             <Link
                                 className="flex flex-col gap-2"
