@@ -1,4 +1,5 @@
 "use client"
+import { forwardRef } from "react"
 import ReactMarkdown from "react-markdown"
 import { format } from "date-fns"
 import { cn } from "@/lib/utils"
@@ -10,9 +11,10 @@ type Props = {
     isCurrentMessageSameAsPrevious: boolean
 }
 
-const Message = ({ message, isCurrentMessageSameAsPrevious }: Props) => {
+const Message = forwardRef<HTMLDivElement, Props>(({ message, isCurrentMessageSameAsPrevious }, ref) => {
     return (
         <div
+            ref={ref}
             className={cn(
                 "flex items-end",
                 {
@@ -82,6 +84,6 @@ const Message = ({ message, isCurrentMessageSameAsPrevious }: Props) => {
             </div>
         </div>
     )
-}
+})
  
 export default Message

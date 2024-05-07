@@ -25,7 +25,7 @@ const ChatWrapper = ({ fileId }: Props) => {
         return (
             <div className="relative min-h-full flex flex-col justify-between gap-2 divide-y divide-border">
                 <div className="flex-1 flex flex-col justify-center mb-28">
-                    <div className="flex flex-col items-center gap-2">
+                    <div className="flex flex-col items-center gap-2 p-6 lg:p-3">
                         <Hourglass className="h-8 w-8 text-rose-500 animate-spin-pulse " />
                         <h3 className="font-semibold text-xl">Loading...</h3>
                         <p className="text-muted-foreground text-sm">
@@ -42,7 +42,7 @@ const ChatWrapper = ({ fileId }: Props) => {
         return (
             <div className="relative min-h-full flex flex-col justify-between gap-2 divide-y divide-border">
                 <div className="flex-1 flex flex-col justify-center mb-28">
-                    <div className="flex flex-col items-center gap-2">
+                    <div className="flex flex-col items-center gap-2 p-6 lg:p-3">
                         <Hourglass className="h-8 w-8 text-rose-500 animate-spin-pulse " />
                         <h3 className="font-semibold text-xl">Processing PDF</h3>
                         <p className="text-muted-foreground text-sm">
@@ -58,7 +58,7 @@ const ChatWrapper = ({ fileId }: Props) => {
         return (
             <div className="relative min-h-full flex flex-col justify-between gap-2 divide-y divide-border">
                 <div className="flex-1 flex flex-col justify-center mb-28">
-                    <div className="flex flex-col items-center gap-2">
+                    <div className="flex flex-col items-center gap-2 p-6 lg:p-3">
                         <XCircle className="h-8 w-8 text-rose-500" />
                         <h3 className="font-semibold text-xl">Quota Limit Exceeded</h3>
                         <p className="text-muted-foreground text-sm">

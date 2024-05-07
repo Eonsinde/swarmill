@@ -43,7 +43,7 @@ export const ourFileRouter = {
                 const loader = new PDFLoader(pdfBlob);
                 const docs = await loader.load();
                 
-                // TODO: check num of pages against user's plan
+                // TODO: check num of pages against user's current plan
                 const numPages = docs.length;
 
                 // vectorize and index the entire document

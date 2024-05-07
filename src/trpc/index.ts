@@ -137,11 +137,6 @@ export const appRouter = router({
                 nextCursor = nextItem?.id;
             }
 
-            console.log("\n\n\ntrpc::getFileMessages::", {
-                // messages,
-                nextCursor
-            });
-
             return {
                 messages,
                 nextCursor

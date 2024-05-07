@@ -1,4 +1,6 @@
+import { useEffect, useRef } from "react"
 import { trpc } from "@/app/_trpc/client"
+import { useIntersection } from "@mantine/hooks"
 import { useChatContext } from "@/context/chat-context"
 import { Loader2, MessageSquare } from "lucide-react"
 import { QUERY_LIMIT } from "@/config/constants"
@@ -11,7 +13,7 @@ type Props = {
 
 const Messages = ({ fileId }: Props) => {
     const { isLoading: isProcessingResponse } = useChatContext();
-    const { data, isLoading, fetchNextPage } = trpc.getFileMessages.useInfiniteQuery({
+    const { data, isLoading, hasNextPage, isFetchingNextPage, fetchNextPage } = trpc.getFileMessages.useInfiniteQuery({
         fileId,
         limit: QUERY_LIMIT
     }, {
@@ -37,15 +39,36 @@ const Messages = ({ fileId }: Props) => {
         ...(messages ?? [])
     ];
 
+    const lastMessageRef = useRef<HTMLDivElement>(null);
+
+    const { ref, entry } = useIntersection({
+        root: lastMessageRef.current,
+        threshold: 1
+    });
+
+    useEffect(() => {
+        if (entry?.isIntersecting)
+            hasNextPage && fetchNextPage();
+    }, [entry, fetchNextPage]);
+
     return (
         <div className="flex-1 max-h-[calc(100vh-3.5rem-7rem)] flex flex-col-reverse gap-4 p-3 border-border overflow-y-auto scrollbar-thumb-blue scrollbar-thumb-rounded scrollbar-track-blue-lighter scrollbar-w-2 scrolling-touch">
             {combinedMessages && combinedMessages.length > 0
             ?
-            (combinedMessages.map((message, index) => {
-                const isCurrentMessageSameAsPrevious = combinedMessages[index - 1]?.isUserMessage === combinedMessages[index]?.isUserMessage
+            <>
+                {(combinedMessages.map((message, index) => {
+                    const isCurrentMessageSameAsPrevious = combinedMessages[index - 1]?.isUserMessage === combinedMessages[index]?.isUserMessage
 
-                if (index === combinedMessages.length-1)
-                // this who help trigger a request to the server to fetch the next page
+                    if (index === combinedMessages.length-1)
+                    // this who help trigger a request to the server to fetch the next page
+                        return (
+                            <Message
+                                ref={ref}
+                                key={index}
+                                message={message}
+                                isCurrentMessageSameAsPrevious={isCurrentMessageSameAsPrevious}
+                            />
+                        )
                     return (
                         <Message
                             key={index}
@@ -53,14 +76,15 @@ const Messages = ({ fileId }: Props) => {
                             isCurrentMessageSameAsPrevious={isCurrentMessageSameAsPrevious}
                         />
                     )
-                return (
-                    <Message
-                        key={index}
-                        message={message}
-                        isCurrentMessageSameAsPrevious={isCurrentMessageSameAsPrevious}
-                    />
-                )
-            }))
+                }))}
+                {/* this is positioned here due to flex-reverse */}
+                {isFetchingNextPage && (
+                    <div className="grid grid-cols-2 gap-4">
+                        <Skeleton className="h-12 rounded-xl" />
+                        <Skeleton className="col-start-2 row-start-2 h-12 rounded-xl" />
+                    </div>
+                )}
+            </>
             :
             isLoading
                 ?
