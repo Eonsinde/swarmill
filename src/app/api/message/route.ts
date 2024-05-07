@@ -34,7 +34,7 @@ export const POST = async (req: NextRequest) => {
     if (!file)
         return new Response("[MESSAGE_ERROR]:NOT_FOUND", { status: 401 });
 
-    const newMessage = await db.message.create({
+    await db.message.create({
         data: {
             text: message,
             fileId: file.id,

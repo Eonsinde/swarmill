@@ -130,14 +130,17 @@ export const appRouter = router({
                 }
             });
 
-            console.log("trpc::getFileMessages::", messages);
-
             let nextCursor: typeof cursor | undefined = undefined;
 
             if (messages.length > limit) {
                 const nextItem = messages.pop();
                 nextCursor = nextItem?.id;
             }
+
+            console.log("\n\n\ntrpc::getFileMessages::", {
+                // messages,
+                nextCursor
+            });
 
             return {
                 messages,

@@ -1,4 +1,6 @@
 "use client"
+import ReactMarkdown from "react-markdown"
+import { format } from "date-fns"
 import { cn } from "@/lib/utils"
 import { ExtendedMessage } from "@/types/index"
 import { Icons } from "./icons"
@@ -31,7 +33,7 @@ const Message = ({ message, isCurrentMessageSameAsPrevious }: Props) => {
                 {message.isUserMessage ? (
                     <Icons.user className="h-3/4 w-3/4" />
                 ): (
-                    <Icons.logo className="h-3/4 w-3/4" />
+                    <Icons.logo className="text-white h-3/4 w-3/4" />
                 )}
             </div>
             <div
@@ -45,7 +47,7 @@ const Message = ({ message, isCurrentMessageSameAsPrevious }: Props) => {
             >
                 <div
                     className={cn(
-                        "",
+                        "py-2 px-4 inline-block rounded-lg",
                         {
                             "bg-rose-500 text-white": message.isUserMessage,
                             "bg-secondary text-white": !message.isUserMessage,
@@ -54,7 +56,28 @@ const Message = ({ message, isCurrentMessageSameAsPrevious }: Props) => {
                         }
                     )}
                 >
-                    
+                    {typeof message.text === "string" ? (
+                        <ReactMarkdown
+                            className="prose-invert text-sm"
+                        >
+                            {message.text}
+                        </ReactMarkdown>
+                    ) : (
+                        message.text
+                    )}
+                    {message.id !== "loading-message" ? (
+                        <div
+                            className={cn(
+                                "mt-2 w-full text-xs text-right select-none",
+                                {
+                                    "text-secondary-foreground": message.isUserMessage,
+                                    "text-muted-foreground": !message.isUserMessage
+                                }
+                            )}
+                        >
+                            {format(new Date(message.createdAt), "HH:mm")}
+                        </div>
+                    ) : null}
                 </div>
             </div>
         </div>

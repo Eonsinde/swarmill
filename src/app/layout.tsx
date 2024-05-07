@@ -3,6 +3,7 @@ import { Inter } from "next/font/google"
 import { cn } from "@/lib/utils"
 import "./globals.css"
 import TrpcProvider from "@/providers/trpc-provider"
+import { Toaster } from "@/components/ui/toaster"
 import Navbar from "@/components/navbar"
 import ModalProvider from "@/providers/modal-provider"
 
@@ -28,6 +29,7 @@ export default function RootLayout({
           <Navbar />
           <ModalProvider />
           {children}
+          <Toaster />
         </TrpcProvider>
       </body>
     </html>

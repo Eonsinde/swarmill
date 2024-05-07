@@ -3,7 +3,10 @@ import { LucideProps, User } from "lucide-react"
 export const Icons = {
     user: User,
     logo: (props: LucideProps) => (
-        <svg xmlns="http://www.w3.org/2000/svg" width={512} height={512} {...props}>
+        <svg
+            viewBox="0 0 500 500"
+            {...props}
+        >
             <path fill="#E11D48" d="M0 0h512v512H0V0z" />
             <path
                 fill="#FEFDFD"

@@ -1,5 +1,7 @@
 import { trpc } from "@/app/_trpc/client"
+import { useChatContext } from "@/context/chat-context"
 import { Loader2, MessageSquare } from "lucide-react"
+import { QUERY_LIMIT } from "@/config/constants"
 import { Skeleton } from "@/components/ui/skeleton"
 import Message from "./message"
 
@@ -8,8 +10,10 @@ type Props = {
 }
 
 const Messages = ({ fileId }: Props) => {
+    const { isLoading: isProcessingResponse } = useChatContext();
     const { data, isLoading, fetchNextPage } = trpc.getFileMessages.useInfiniteQuery({
-        fileId
+        fileId,
+        limit: QUERY_LIMIT
     }, {
         getNextPageParam: (lastPage) => lastPage?.nextCursor,
         keepPreviousData: true
@@ -29,7 +33,7 @@ const Messages = ({ fileId }: Props) => {
     }
 
     const combinedMessages = [
-        ...(false ? [loadingMessage] : []),
+        ...(isProcessingResponse ? [loadingMessage] : []),
         ...(messages ?? [])
     ];
 
@@ -61,17 +65,17 @@ const Messages = ({ fileId }: Props) => {
             isLoading
                 ?
                 <div className="w-full flex flex-col gap-2">
-                    <Skeleton className="h-16 rounded-xl" />
-                    <Skeleton className="h-16 rounded-xl" />
-                    <Skeleton className="h-16 rounded-xl" />
-                    <Skeleton className="h-16 rounded-xl" />
+                    <Skeleton className="h-12 rounded-xl" />
+                    <Skeleton className="h-12 rounded-xl" />
+                    <Skeleton className="h-12 rounded-xl" />
+                    <Skeleton className="h-12 rounded-xl" />
                 </div>
                 :
                 <div className="flex-1 flex flex-col justify-center items-center gap-2">
                     <MessageSquare className="h-8 w-8 text-rose-500" />
                     <h3 className="font-semibold text-xl">You&apos;re all set!</h3>
                     <p className="text-muted-foreground text-sm">
-                        Ask answer question to get started
+                        Ask any question to get started
                     </p>
                 </div>}
         </div>
