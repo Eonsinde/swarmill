@@ -1,8 +1,7 @@
 import Link from "next/link"
 import Image from "next/image"
-import { ArrowRight } from "lucide-react"
 import MaxWidthWrapper from "@/components/max-width-wrapper"
-import { buttonVariants } from "@/components/ui/button"
+import GetStartedButton from "@/components/get-started-button"
 
 const Home = () => {
     return (
@@ -19,16 +18,7 @@ const Home = () => {
                 <p className="mt-5 max-w-prose sm:text-lg text-muted-foreground">
                     Smarmill allows you to have conversations with any PDF document. Simply upload your file and start asking question right away
                 </p>
-                <Link
-                    className={buttonVariants({
-                        size: "lg",
-                        className: "mt-5"
-                    })}
-                    href="/dashboard"
-                    target="_blank"
-                >
-                    Get Started <ArrowRight className="ml-2 h-5 w-5" />
-                </Link>
+                <GetStartedButton />
             </MaxWidthWrapper>
             {/* value proposition section */}
             <div>

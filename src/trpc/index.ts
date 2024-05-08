@@ -8,6 +8,9 @@ import { getUserSubscriptionPlan, stripe } from "@/lib/stripe"
 import { getURL } from "@/lib/absolute-url"
 import { QUERY_LIMIT } from "../config/constants"
 import { PLANS } from "@/config/payment-plans"
+import { pc } from "@/lib/pinecone"
+import { OpenAIEmbeddings } from "@langchain/openai"
+import { PineconeStore } from "@langchain/pinecone"
 
 export const appRouter = router({
     authCallback: publicProcedure.query(async () => {
@@ -84,6 +87,24 @@ export const appRouter = router({
         });
 
         if (!file) throw new TRPCError({ code: "NOT_FOUND", message: "File not found" });
+
+        // vectorize user message and make semantic query to pineconde index
+        const pineconeIndex = pc.Index(process.env.PINECONE_INDEX!);
+        const embeddings = new OpenAIEmbeddings({
+            openAIApiKey: process.env.OPENAI_API_KEY
+        });
+
+        const vectorStore = await PineconeStore.fromExistingIndex(
+            embeddings,
+            {
+                pineconeIndex,
+                namespace: file.id
+            }
+        );
+
+        await vectorStore.delete({
+            deleteAll: true
+        });
 
         await db.file.delete({
             where: {

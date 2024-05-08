@@ -2,15 +2,15 @@
 import Link from "next/link"
 import Image from "next/image"
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs"
-import { LogoutLink } from "@kinde-oss/kinde-auth-nextjs/components"
 import useModalStore from "@/hooks/use-modal-store"
 import { ArrowRight } from "lucide-react"
-import { Button, buttonVariants } from "@/components/ui/button"
 import MaxWidthWrapper from "@/components/max-width-wrapper"
+import { Button, buttonVariants } from "@/components/ui/button"
+import UserAccountDropdown from "@/components/user-account-dropdown"
 
 const Navbar = () => {
     const { onOpen } = useModalStore();
-    const { isLoading, user } = useKindeBrowserClient();
+    const { isLoading, user: kindleUser } = useKindeBrowserClient();
 
     return (
         <nav className="h-14 sticky top-0 inset-x-0 z-30 w-full border-b border-border backdrop-blur-lg transition-all">
@@ -31,25 +31,49 @@ const Navbar = () => {
                     </Link>
                     {/* TODO: add mobile navbar */}
                     <div className="hidden sm:flex items-center space-x-4">
-                        <>
-                            <Link
-                                className={buttonVariants({
-                                    variant: "ghost",
-                                    size: "sm"
-                                })}
-                                href="/pricing"
-                            >
-                                Pricing
-                            </Link>
-                            <Button
-                                className={buttonVariants({
-                                    size: "sm"
-                                })}
-                                onClick={() => onOpen("authModal")}
-                            >
-                                Get Started <ArrowRight className="ml-1.5 h-5 w-5" />
-                            </Button>
-                        </>
+                        {!kindleUser ? (
+                            <>
+                                <Link
+                                    className={buttonVariants({
+                                        variant: "ghost",
+                                        size: "sm"
+                                    })}
+                                    href="/pricing"
+                                >
+                                    Pricing
+                                </Link>
+                                <Button
+                                    className={buttonVariants({
+                                        size: "sm"
+                                    })}
+                                    onClick={() => onOpen("authModal")}
+                                    disabled={isLoading!}
+                                >
+                                    Get Started <ArrowRight className="ml-1.5 h-5 w-5" />
+                                </Button>
+                            </>
+                        ) : (
+                            <>
+                                <Link
+                                    className={buttonVariants({
+                                        variant: "ghost",
+                                        size: "sm"
+                                    })}
+                                    href="/pricing"
+                                >
+                                    Pricing
+                                </Link>
+                                <UserAccountDropdown
+                                    name={
+                                        !kindleUser.family_name || !kindleUser.given_name
+                                        ? "Your Account"
+                                        : `${kindleUser.given_name} ${kindleUser.family_name}`
+                                    }
+                                    email={kindleUser.email ?? ""}
+                                    imageUrl={kindleUser.picture ?? ""}
+                                />
+                            </>
+                        )}
                     </div>
                 </div>
             </MaxWidthWrapper>

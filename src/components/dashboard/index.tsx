@@ -14,7 +14,7 @@ const Dashboard = () => {
     const { data: files, isLoading } = trpc.getUserFiles.useQuery();
 
     return (
-        <main className="mx-auto max-w-7xl md:p-10">
+        <main className="mx-auto max-w-7xl px-2.5 md:p-10">
             <div className="mt-8 pb-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-0 border-b border-border">
                 <h1 className="mb-3 font-bold text-xl md:text-3xl">My Files</h1>
                 <UploadButton />
@@ -74,7 +74,7 @@ const Dashboard = () => {
                     <Skeleton className="hidden lg:block h-[125px] rounded-xl" />
                 </div>
             ): (
-                <div className="mt-16 flex flex-col items-center gap-2">
+                <div className="mt-16 flex flex-col items-center gap-2 text-center">
                     <Ghost className="h-8 w-8 text-zinc-200" />
                     <h3 className="text-xl font-semibold">
                         Pretty empty around here
