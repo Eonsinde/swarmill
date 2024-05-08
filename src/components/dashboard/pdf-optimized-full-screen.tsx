@@ -72,7 +72,7 @@ const PDFOptimizedFullScreen = ({ url, activePageIndex }: Props) => {
         const actualHeight = pageViewport.height * scale;
 
         return actualHeight;
-    }, [pageViewports]);
+    }, [pageViewports, width]);
 
     return (
         <Dialog

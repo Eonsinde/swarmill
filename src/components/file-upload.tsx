@@ -233,7 +233,9 @@ const FileUpload = forwardRef<HTMLInputElement, Props>(({
             </div>
         </div>
     );
-});
+})
+
+FileUpload.displayName = "FileUpload"
 
 function formatFileSize(bytes?: number) {
     if (!bytes) {

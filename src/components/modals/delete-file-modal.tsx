@@ -16,7 +16,7 @@ const DeleteFileModal = () => {
     const utils = trpc.useUtils();
     const { isOpen, type, data, onClose } = useModalStore();
 
-    const isModalOpen = useMemo(() => isOpen && type === "deleteFile", [isOpen, type, data]);
+    const isModalOpen = useMemo(() => isOpen && type === "deleteFile", [isOpen, type]);
 
     const { mutate: deleteMutate, isLoading } = trpc.deleteFile.useMutation({
         onSuccess: () => {

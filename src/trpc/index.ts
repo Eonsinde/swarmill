@@ -4,7 +4,10 @@ import { z } from "zod"
 import { TRPCError } from "@trpc/server"
 import { db } from "@/lib/db"
 import { privateProcedure, publicProcedure, router } from "./trpc"
+import { getUserSubscriptionPlan, stripe } from "@/lib/stripe"
+import { getURL } from "@/lib/absolute-url"
 import { QUERY_LIMIT } from "../config/constants"
+import { PLANS } from "@/config/payment-plans"
 
 export const appRouter = router({
     authCallback: publicProcedure.query(async () => {
@@ -141,6 +144,56 @@ export const appRouter = router({
                 messages,
                 nextCursor
             }
+        }),
+    createStripeCheckoutSession: privateProcedure
+        .input(z.object({ cancel_url: z.string().nullish() }).nullish())
+        .mutation(async ({ ctx, input }) => {
+            const { kindleUserId } = ctx;
+
+            // const cancel_url = input?.cancel_url ? absoluteUrl(input?.cancel_url) : null;
+            // const billingUrl = absoluteUrl("/dashboard/billing");
+
+            const cancel_url = input?.cancel_url ? `${getURL()}${input?.cancel_url}` : null;
+            const billingUrl = `${getURL()}dashboard/billing`;
+
+            const authProfile = await db.profile.findFirst({
+                where: {
+                    kindleUserId
+                }
+            });
+
+            if (!authProfile) throw new TRPCError({ code: "UNAUTHORIZED" });
+
+            const subscriptionPlan = await getUserSubscriptionPlan();
+
+            if (subscriptionPlan.isSubscribed && authProfile.stripeCustomerId) {
+                // redirect user to billing page since they have an active subscription already
+                const stripeSession = await stripe.billingPortal.sessions.create({
+                    customer: authProfile.stripeCustomerId,
+                    return_url: cancel_url ?? billingUrl
+                });
+
+                return { url: stripeSession.url }
+            }
+
+            const stripeSession = await stripe.checkout.sessions.create({
+                success_url: billingUrl,
+                cancel_url: cancel_url ?? billingUrl,
+                payment_method_types: ["card", "paypal"],
+                mode: "subscription",
+                billing_address_collection: "auto",
+                line_items: [
+                    {
+                        price: PLANS.find(plan => plan.name === "Pro")?.pricing.priceIds.test,
+                        quantity: 1
+                    }
+                ],
+                metadata: {
+                    kindleUserId
+                }
+            });
+
+            return { url: stripeSession.url }
         })
 });
 

@@ -10,14 +10,12 @@ import {
     Dialog,
     DialogContent,
     DialogDescription,
-    DialogFooter,
     DialogHeader,
     DialogTitle
 } from "@/components/ui/dialog"
 import {
     Form,
     FormControl,
-    FormDescription,
     FormField,
     FormItem,
     FormLabel,
@@ -28,7 +26,7 @@ import { Button, buttonVariants } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
  
 const formSchema = z.object({
-    email: z.string().email("Must be a valid email"),
+    email: z.string().email("Must be a valid email")
 });
 
 const AuthModal = () => {
@@ -116,7 +114,7 @@ const AuthModal = () => {
                         <span>Sign with Email</span>
                     </LoginLink>
                     <div className="text-sm">
-                        Don't have an account?{' '}
+                        Don&apos;t have an account?{' '}
                         <RegisterLink
                             className="text-rose-600 hover:text-rose-600/90 hover:underline transition-all"
                             authUrlParams={{

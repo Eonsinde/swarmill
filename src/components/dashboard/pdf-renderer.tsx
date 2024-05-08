@@ -17,9 +17,7 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import PdfFullScreenOptimized from "@/components/dashboard/pdf-full-screen-optimized"
 import PDFOptimizedFullScreen from "@/components/dashboard/pdf-optimized-full-screen"
-import PDFFullScreen from "@/components/dashboard/pdf-full-screen"
 
 import "react-pdf/dist/Page/AnnotationLayer.css"
 import "react-pdf/dist/Page/TextLayer.css"
