@@ -1,5 +1,5 @@
 "use client"
-import { useCallback, useEffect, useMemo, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { Document, Page } from "react-pdf"
 import { VariableSizeList as List } from "react-window"
 import { asyncMap } from "@wojtekmaj/async-array-utils"
@@ -32,7 +32,6 @@ const PDFOptimizedFullScreen = ({ url, activePageIndex }: Props) => {
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const [pdf, setPdf] = useState<any>(null);
     const [pageViewports, setPageViewports] = useState<any>(null);
-    const [initialOffset, setInitialOffset] = useState<number>(0);
 
     /**
      * React-Window cannot get item size using async getter, therefore we need to
@@ -51,14 +50,14 @@ const PDFOptimizedFullScreen = ({ url, activePageIndex }: Props) => {
             );
 
             const nextPageViewports = await asyncMap(pageNumbers, (pageNumber) =>
-                pdf.getPage(pageNumber).then((page) => page.getViewport({ scale: 1 }))
+                pdf.getPage(pageNumber).then((page: any) => page.getViewport({ scale: 1 }))
             );
 
             setPageViewports(nextPageViewports);
         })();
     }, [pdf]);
 
-    const onDocumentLoadSuccess = (nextPdf) => {
+    const onDocumentLoadSuccess = (nextPdf: any) => {
         setPdf(nextPdf);
     }
 
