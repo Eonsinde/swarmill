@@ -222,7 +222,7 @@ const FileUpload = forwardRef<HTMLInputElement, Props>(({
                                 indicatorColor={(uploadProgress === 100) ? "bg-green-500" : ""}
                             />
                         </div>
-                        {uploadProgress === 100 && (
+                        {(uploadProgress === 100) && (
                             <div className="mt-2 flex justify-center items-center gap-1 text-sm text-center text-muted-foreground">
                                 <Loader2 className="h-3 w-3 animate-spin" />
                                 Redirecting...

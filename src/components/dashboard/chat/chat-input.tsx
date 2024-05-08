@@ -1,3 +1,4 @@
+"use client"
 import { useRef } from "react"
 import { useChatContext } from "@/context/chat-context"
 import { Send } from "lucide-react"

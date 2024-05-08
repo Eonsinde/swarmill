@@ -7,6 +7,7 @@ import { Check, HelpCircle, Minus } from "lucide-react"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import MaxWidthWrapper from "@/components/max-width-wrapper"
 import UpgradeButton from "@/components/pricing/upgrade-button"
+import { getUserSubscriptionPlan } from "@/lib/stripe"
 
 const page = async () => {
     const { getUser } = getKindeServerSession();
@@ -23,6 +24,11 @@ const page = async () => {
 
     if (kindleUser && !authProfile) // only if one is auth and doesn't have a profile should they be redirected
         return redirect(`/auth-callback?origin=pricing`);
+
+    let subscriptionPlan = undefined;
+
+    if (authProfile)
+        subscriptionPlan = await getUserSubscriptionPlan();
 
     const pricingItems = [
         {
@@ -188,49 +194,33 @@ const page = async () => {
                                     ))}
                                 </ul>
                                 {/* TODO: check user's subscription to render active button */}
-                                {plan === "Pro" ? true ? ( // true should be replaced with isSubscribed
-                                    <div
-                                        className="m-5 bg-primary text-primary-foreground h-10 py-2 px-4 flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium"
-                                    >
-                                        Active
-                                    </div>
-                                ) : (
-                                    <UpgradeButton isAuthenticated={!!kindleUser} />
-                                ) : true ? ( // on Free plan, if isSubscribed to Pro plan show nothing
-                                    <></>
-                                ) : (
-                                    <div
-                                        className="m-5 bg-primary text-primary-foreground h-10 py-2 px-4 flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium"
-                                    >
-                                        Active
-                                    </div>
-                                )}
-                                {/* <div className="p-5">
-                                    
-                                    {plan === "Free" ? (
-                                        <Link
-                                            className={buttonVariants({
-                                                className: "w-full"
-                                            })}
-                                            href="/sign-in"
+                                {kindleUser
+                                ?
+                                    subscriptionPlan?.isSubscribed
+                                    ?
+                                        (plan === "Pro")
+                                        ?
+                                        <div
+                                            className="m-5 bg-primary text-primary-foreground h-10 py-2 px-4 flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium"
                                         >
-                                            {authProfile ? "Upgrade now" : "Sign up"}
-                                            <ArrowRight className="h-5 w-5 ml-1.5" />
-                                        </Link>
-                                    ) : authProfile ? (
-                                        <UpgradeButton />
-                                    ) : (
-                                        <Link
-                                            className={buttonVariants({
-                                                className: "w-full"
-                                            })}
-                                            href="/sign-in"
+                                            Active
+                                        </div>
+                                        :
+                                        <></>
+                                    :
+                                        (plan === "Pro")
+                                        ?
+                                        <div className="p-5">
+                                            <UpgradeButton isAuthenticated={!!kindleUser} />
+                                        </div>
+                                        :
+                                        <div
+                                            className="m-5 bg-primary text-primary-foreground h-10 py-2 px-4 flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium"
                                         >
-                                            {authProfile ? "Upgrade now" : "Sign up"}
-                                            <ArrowRight className="h-5 w-5 ml-1.5" />
-                                        </Link>
-                                    )}
-                                </div> */}
+                                            Active
+                                        </div>
+                                :
+                                null}
                             </div>
                         )
                     })}

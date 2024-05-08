@@ -21,7 +21,6 @@ const Home = () => {
                 <GetStartedButton />
             </MaxWidthWrapper>
             {/* value proposition section */}
-            <div>
                 <div className="relative isolate">
                     <div aria-hidden="true" className="pointer-events-none absolute -top-40 sm:-top-80 -z-10 blur-3xl transform-gpu overflow-hidden">
                         <div
@@ -35,11 +34,11 @@ const Home = () => {
                         <div className="mt-16 sm:mt-24 flow-root">
                             <div className="bg-gray-900/5 -m-2 lg:-m-4 p-2 lg:p-4 ring-1 ring-inset ring-gray-900/10 rounded-xl">
                                 <Image
-                                    className="bg-background p-2 sm:p-8 md:p-20 shadow-2xl ring-1 ring-gray-900/10 rounded-md"
-                                    src="/images/dashboard-preview.jpg"
+                                    className="bg-background p-2 sm:p-8 md:p-10 lg:p-20 shadow-2xl ring-1 ring-gray-900/10 rounded-md"
+                                    src="/images/chat-preview.png"
                                     alt="product preview"
-                                    width={1364}
-                                    height={866}
+                                    width={1628}
+                                    height={869}
                                     quality={100}
                                 />
                             </div>
@@ -54,10 +53,9 @@ const Home = () => {
                         />
                     </div>
                 </div>
-            </div>
             {/* feature section */}
             <div className="mx-auto max-w-5xl mb-32 mt-32 sm:mt-56">
-                <div className="mx-auto max-w-2xl sm:text-center">
+                <div className="mx-auto max-w-2xl text-center">
                     <h2 className="mt-2 font-bold text-4xl sm:text-5xl">
                         Start chatting in minutes
                     </h2>
@@ -66,9 +64,9 @@ const Home = () => {
                     </p>
                 </div>
                 {/* steps */}
-                <ol className="my-8 pt-8 md:flex md:space-x-12 space-y-4 md:space-y-0">
+                <ol className="my-8 pt-0 md:pt-8 md:flex space-x-0 md:space-x-6 lg:space-x-12 space-y-4 md:space-y-0">
                     <li className="md:flex-1">
-                        <div className="flex flex-col space-y-2 py-2 md:pb-0 md:pt-4 pl-4 md:pl-0 border-border border-t-2 border-l-4 md:border-l-0">
+                        <div className="flex flex-col space-y-2 py-2 md:pb-0 md:pt-4 px-4 md:px-0 border-t-2 border-border">
                             <span className="text-sm font-medium text-rose-600">Step 1</span>
                             <span className="text-xl font-semibold">Get Started</span>
                             <span className="mt-2 text-secondary-foreground">
@@ -84,7 +82,7 @@ const Home = () => {
                         </div>
                     </li>
                     <li className="md:flex-1">
-                        <div className="flex flex-col space-y-2 py-2 md:pb-0 md:pt-4 pl-4 md:pl-0 border-border border-t-2 border-l-4 md:border-l-0">
+                        <div className="flex flex-col space-y-2 py-2 md:pb-0 md:pt-4 px-4 md:px-0 border-t-2 border-border">
                             <span className="text-sm font-medium text-rose-600">Step 2</span>
                             <span className="text-xl font-semibold">Upload your PDF file</span>
                             <span className="mt-2 text-secondary-foreground">
@@ -93,7 +91,7 @@ const Home = () => {
                         </div>
                     </li>
                     <li className="md:flex-1">
-                        <div className="flex flex-col space-y-2 py-2 md:pb-0 md:pt-4 pl-4 md:pl-0 border-border border-t-2 border-l-4 md:border-l-0">
+                        <div className="flex flex-col space-y-2 py-2 md:pb-0 md:pt-4 px-4 md:px-0 border-t-2 border-border">
                             <span className="text-sm font-medium text-rose-600">Step 3</span>
                             <span className="text-xl font-semibold">Start asking questions</span>
                             <span className="mt-2 text-secondary-foreground">
@@ -106,11 +104,11 @@ const Home = () => {
                     <div className="mt-16 sm:mt-24 flow-root">
                         <div className="bg-gray-900/5 -m-2 lg:-m-4 p-2 lg:p-4 ring-1 ring-inset ring-gray-900/10 rounded-xl">
                             <Image
-                                className="bg-background p-2 sm:p-8 md:p-20 shadow-2xl ring-1 ring-gray-900/10 rounded-md"
-                                src="/images/file-upload-preview.jpg"
+                                className="bg-background rounded-md"
+                                src="/images/upload-preview.png"
                                 alt="uploading preview"
-                                width={1419}
-                                height={732}
+                                width={1684}
+                                height={857}
                                 quality={100}
                             />
                         </div>
