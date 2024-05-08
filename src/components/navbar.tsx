@@ -7,10 +7,11 @@ import { ArrowRight } from "lucide-react"
 import MaxWidthWrapper from "@/components/max-width-wrapper"
 import { Button, buttonVariants } from "@/components/ui/button"
 import UserAccountDropdown from "@/components/user-account-dropdown"
+import MobileNavbar from "@/components/mobile-navbar"
 
 const Navbar = () => {
     const { onOpen } = useModalStore();
-    const { isLoading, user: kindleUser } = useKindeBrowserClient();
+    const { isLoading, isAuthenticated, user: kindleUser } = useKindeBrowserClient();
 
     return (
         <nav className="h-14 sticky top-0 inset-x-0 z-30 w-full border-b border-border backdrop-blur-lg transition-all">
@@ -30,7 +31,8 @@ const Navbar = () => {
                         <span className="ml-1">Smarmill.</span>
                     </Link>
                     {/* TODO: add mobile navbar */}
-                    <div className="hidden sm:flex items-center space-x-4">
+                    <MobileNavbar isAuth={isAuthenticated!} />
+                    <div className="hidden md:flex items-center space-x-4">
                         {!kindleUser ? (
                             <>
                                 <Link

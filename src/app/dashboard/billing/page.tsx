@@ -1,8 +1,8 @@
+import { format } from "date-fns"
 import { getUserSubscriptionPlan } from "@/lib/stripe"
 import MaxWidthWrapper from "@/components/max-width-wrapper"
 import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import BillingButton from "@/components/billing/billing-button";
-import { format } from "date-fns";
+import BillingButton from "@/components/billing/billing-button"
 
 const billing = async () => {
     const subscriptionPlan = await getUserSubscriptionPlan();

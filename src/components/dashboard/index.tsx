@@ -16,7 +16,7 @@ const Dashboard = () => {
     return (
         <main className="mx-auto max-w-7xl px-2.5 md:p-10">
             <div className="mt-8 pb-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-0 border-b border-border">
-                <h1 className="mb-3 font-bold text-xl md:text-3xl">My Files</h1>
+                <h1 className="mb-3 font-bold text-3xl">My Files</h1>
                 <UploadButton />
             </div>
             {/* display all files */}
