@@ -16,7 +16,7 @@ const GlobalError = () => {
                     Wrong Adress Hit!
                 </h2>
                 <p className="mt-2 text-lg text-muted-foreground">
-                    The page you requested isn't available on our server lad
+                    The page you requested isn&apos;t available on our server lad
                 </p>
             </div>
         </div>

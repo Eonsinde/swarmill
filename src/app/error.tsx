@@ -1,7 +1,7 @@
 "use client"
 import Image from "next/image"
 
-const Error = () => {
+const GlobalError = () => {
     return (
         <div className="h-[calc(100vh-56rem)] overflow-hidden">
             <div className="flex flex-col space-y-2 text-center">
@@ -16,11 +16,11 @@ const Error = () => {
                     Wrong Adress Hit!
                 </h2>
                 <p className="mt-2 text-lg text-muted-foreground">
-                    The page you requested isn't available on our server lad
+                    The page you requested isn&apos;t available on our server lad
                 </p>
             </div>
         </div>
     )
 }
  
-export default Error
+export default GlobalError
