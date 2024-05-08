@@ -20,7 +20,7 @@ const UploadModal = () => {
         >
             <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader />
-                <FileUpload />
+                <FileUpload  />
             </DialogContent>
         </Dialog>
     );

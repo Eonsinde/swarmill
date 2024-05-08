@@ -2,13 +2,17 @@
 import Link from "next/link"
 import { format } from "date-fns"
 import useModalStore from "@/hooks/use-modal-store"
-import { Ghost, MessageSquare, Plus, Trash } from "lucide-react"
 import { trpc } from "@/app/_trpc/client"
+import { getUserSubscriptionPlan } from "@/lib/stripe"
+import { Ghost, MessageSquare, Plus, Trash } from "lucide-react"
 import { Skeleton } from "@/components/ui/skeleton"
-import UploadButton from "@/components/dashboard/upload-button"
 import { Button } from "@/components/ui/button"
 
-const Dashboard = () => {
+type Props = {
+    subscriptionPlan: Awaited<ReturnType<typeof getUserSubscriptionPlan>>
+}
+
+const Dashboard = ({ subscriptionPlan }: Props) => {
     const { onOpen } = useModalStore();
 
     const { data: files, isLoading } = trpc.getUserFiles.useQuery();
@@ -17,7 +21,12 @@ const Dashboard = () => {
         <main className="mx-auto max-w-7xl px-2.5 md:p-10">
             <div className="mt-8 pb-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-0 border-b border-border">
                 <h1 className="mb-3 font-bold text-3xl">My Files</h1>
-                <UploadButton />
+                <Button
+                    variant="primary"
+                    onClick={() => onOpen("uploadModal", { isSubscribed: subscriptionPlan.isSubscribed })}
+                >
+                    Upload PDF
+                </Button>
             </div>
             {/* display all files */}
             {files && files?.length > 0 ? (

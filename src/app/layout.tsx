@@ -6,13 +6,11 @@ import TrpcProvider from "@/providers/trpc-provider"
 import { Toaster } from "@/components/ui/toaster"
 import Navbar from "@/components/navbar"
 import ModalProvider from "@/providers/modal-provider"
+import { constructMetadata } from "@/lib/absolute-url"
 
 const inter = Inter({ subsets: ["latin"] })
 
-export const metadata: Metadata = {
-  title: "Swarmill",
-  description: "Your SAAS platform for a great PDF research",
-}
+export const metadata: Metadata = constructMetadata()
 
 export default function RootLayout({
   children,

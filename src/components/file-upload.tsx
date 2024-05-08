@@ -53,7 +53,7 @@ const FileUpload = forwardRef<HTMLInputElement, Props>(({
     dropzoneOptions,
 }: Props, ref) => {
     const router = useRouter();
-    const { onClose } = useModalStore();
+    const { data, onClose } = useModalStore();
 
     const { mutate: pollingMutate } = trpc.getFile.useMutation({
         onSuccess: (file) => {
@@ -64,7 +64,7 @@ const FileUpload = forwardRef<HTMLInputElement, Props>(({
         retryDelay: 500
     });
 
-    const { startUpload } = useUploadThing("pdfUploader");
+    const { startUpload } = useUploadThing(data?.isSubscribed ? "proPDFUploader" : "freePDFUploader");
 
     const [uploadProgress, setUploadProgress] = useState<number>(0);
     const [isUploading, setIsUploading] = useState<boolean>(false);
@@ -197,7 +197,7 @@ const FileUpload = forwardRef<HTMLInputElement, Props>(({
                             <span className="font-semibold">Click to upload</span> or Drag & Drop
                         </div>
                         {/* TODO: dynamically set this based on user's subscription plan */}
-                        <p className="text-sm text-muted-foreground">PDF (up to 4MB)</p>
+                        <p className="text-sm text-muted-foreground">PDF (up to {data?.isSubscribed ? "16" : "4"}MB)</p>
                     </div>
                     {(acceptedFiles && acceptedFiles[0]) ? (
                         <div className="max-w-xs bg-muted/40 flex items-center divide-x divide-border rounded-md overflow-hidden">

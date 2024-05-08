@@ -1,3 +1,5 @@
+import { Metadata } from "next"
+
 export const absoluteUrl = (path: string) => {
     if (typeof window !== undefined) return path
     
@@ -16,4 +18,48 @@ export const getURL = () => {
     url = url.charAt(url.length - 1) === "/" ? url : `${url}/`;
 
     return url;
+}
+
+export const constructMetadata = ({
+    title= "Swarmill - Saas for Students, Educators & Researchers",
+    description="Swamrill is an open-source software that makes chatting with your PDF files very easy. This can be very useful to speed up research work",
+    image="/thumbnail.png",
+    icons="favicon.ico",
+    noIndex=false
+}: {
+    title?: string
+    description?: string
+    image?: string
+    icons?: string
+    noIndex?: boolean
+} = {}): Metadata => {
+    return {
+        title,
+        description,
+        openGraph: {
+            title,
+            description,
+            images: [
+                {
+                    url: image
+                }
+            ]
+        },
+        twitter: {
+            card: "summary_large_image",
+            title,
+            description,
+            images: [image],
+            creator: "@eonsinde"
+        },
+        icons,
+        metadataBase: new URL("https://swarmill.vercel.app"),
+        themeColor: "#09090b",
+        ...(noIndex && {
+            robots: {
+                index: false,
+                follow: false
+            }
+        })
+    }
 }
