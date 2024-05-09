@@ -136,7 +136,7 @@ const FileUpload = forwardRef<HTMLInputElement, Props>(({
         },
         ...{
             ...dropzoneOptions,
-            maxSize: data?.isSubscribed ? MAX_FILE_SIZE_PRO : MAX_FILE_SIZE_FREE
+            maxSize: data?.isSubscribed ? (MAX_FILE_SIZE_PRO * 1024 * 1024) : (MAX_FILE_SIZE_FREE * 1024 * 1024)
         }
     });
 
