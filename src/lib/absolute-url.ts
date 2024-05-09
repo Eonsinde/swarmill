@@ -53,7 +53,7 @@ export const constructMetadata = ({
             creator: "@eonsinde"
         },
         icons,
-        metadataBase: new URL("https://swarmill.vercel.app"),
+        metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "https://swarmill.netlify.app"),
         themeColor: "#09090b",
         ...(noIndex && {
             robots: {
