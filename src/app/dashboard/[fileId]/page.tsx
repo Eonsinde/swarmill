@@ -50,7 +50,7 @@ const FileDetails = async ({ params: { fileId } }: Props) => {
                     </div>
                 </div>
                 {/* right side */}
-                <div className="shrink-0 flex-[0.75] lg:w-96 border-t border-border lg:border-[1px] lg:border-t-0">
+                <div className="shrink-0 flex-[0.75] xl:w-96 border-t border-border lg:border-[1px] lg:border-t-0">
                     <ChatWrapper fileId={file.id} />
                 </div>
             </div>
