@@ -68,7 +68,7 @@ const PDFRenderer = ({ url }: Props) => {
     return (
         <div className="w-full bg-secondary flex flex-col items-center shadow rounded-md">
             <div className="h-14 w-full px-2 flex justify-between items-center border-b border-border">
-                <div className="flex items-center gap-1.5">
+                <div className="hidden md:flex items-center gap-1.5">
                     <Button
                         variant="ghost"
                         aria-label="previous page"
@@ -109,7 +109,7 @@ const PDFRenderer = ({ url }: Props) => {
                         <ChevronUp className="h-4 w-4" />
                     </Button>
                 </div>
-                <div className="space-x-2">
+                <div className="w-full md:w-auto flex justify-between items-center space-x-2">
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                             <Button
@@ -137,17 +137,19 @@ const PDFRenderer = ({ url }: Props) => {
                             </DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
-                    <Button
-                        onClick={() => setPageRotation(prev => prev + 90)}
-                        variant="ghost"
-                        aria-label="rotate by 90Degs"
-                    >
-                        <RotateCw className="h-4 w-4" />
-                    </Button>
-                    <PDFOptimizedFullScreen
-                        url={url}
-                        activePageIndex={currentPage-1}
-                    />
+                    <div>
+                        <Button
+                            onClick={() => setPageRotation(prev => prev + 90)}
+                            variant="ghost"
+                            aria-label="rotate by 90Degs"
+                        >
+                            <RotateCw className="h-4 w-4" />
+                        </Button>
+                        <PDFOptimizedFullScreen
+                            url={url}
+                            activePageIndex={currentPage-1}
+                        />
+                    </div>
                 </div>
             </div>
             <div className="flex-1 max-h-screen w-full">
@@ -199,6 +201,49 @@ const PDFRenderer = ({ url }: Props) => {
                         </Document>
                     </div>
                 </SimpleBar>
+            </div>
+            <div className="h-14 w-full px-2 flex md:hidden justify-center items-center border-t border-border">
+                <div className="flex items-center gap-1.5">
+                    <Button
+                        variant="ghost"
+                        aria-label="previous page"
+                        disabled={currentPage <= 1}
+                        onClick={() => {
+                            setCurrentPage(prev => (prev - 1 > 1) ? prev - 1 : 1)
+                            setValue("page", String(currentPage - 1))
+                        }}
+                    >
+                        <ChevronDown className="h-4 w-4" />
+                    </Button>
+                    <div className="flex items-center gap-1.5">
+                        <Input
+                            {...register("page")}
+                            className={cn(
+                                "h-8 w-12",
+                                errors?.page && "focus-visible:ring-red-500"
+                            )}
+                            onKeyDown={(e) => {
+                                if (e.key === "Enter")
+                                    handleSubmit(onSubmit)()
+                            }}
+                        />
+                        <p className="text-muted-foreground text-sm space-x-1">
+                            <span>/</span>
+                            <span>{numPages ?? "x"}</span>
+                        </p>
+                    </div>
+                    <Button
+                        variant="ghost"
+                        aria-label="next page"
+                        disabled={!numPages || currentPage >= numPages!}
+                        onClick={() => {
+                            setCurrentPage(prev => (prev + 1 > numPages!) ? numPages! : prev + 1)
+                            setValue("page", String(currentPage + 1))
+                        }}
+                    >
+                        <ChevronUp className="h-4 w-4" />
+                    </Button>
+                </div>
             </div>
         </div>
     )
