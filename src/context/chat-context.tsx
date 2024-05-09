@@ -196,7 +196,7 @@ export default function ChatContextProvider({ fileId, children }: Props) {
         setMessage(event.target.value);
     }, []);
 
-    const addMessage = () => postMutation.mutate({ message }) 
+    const addMessage = () => message && postMutation.mutate({ message }) 
 
     return (
         <chatContext.Provider
