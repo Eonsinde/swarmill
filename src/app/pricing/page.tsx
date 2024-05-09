@@ -2,12 +2,14 @@ import { redirect } from "next/navigation"
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server"
 import { db } from "@/lib/db"
 import { cn } from "@/lib/utils"
+import { getUserSubscriptionPlan } from "@/lib/stripe"
 import { PLANS } from "@/config/payment-plans"
+import { MAX_FILE_SIZE_FREE, MAX_FILE_SIZE_PRO } from "@/config/constants"
 import { Check, HelpCircle, Minus } from "lucide-react"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import MaxWidthWrapper from "@/components/max-width-wrapper"
 import UpgradeButton from "@/components/pricing/upgrade-button"
-import { getUserSubscriptionPlan } from "@/lib/stripe"
+
 
 const page = async () => {
     const { getUser } = getKindeServerSession();
@@ -42,7 +44,7 @@ const page = async () => {
                     "The maximum amount of pages per PDF-file.",
                 },
                 {
-                    text: "4MB file size limit",
+                    text: `${MAX_FILE_SIZE_FREE}MB file size limit`,
                     footNote:
                     "The maximum file size of a single PDF file.",
                 },
@@ -72,7 +74,7 @@ const page = async () => {
                     "The maximum amount of pages per PDF-file.",
                 },
                 {
-                    text: "16MB file size limit",
+                    text: `${MAX_FILE_SIZE_PRO}MB file size limit`,
                     footNote:
                     "The maximum file size of a single PDF file.",
                 },
