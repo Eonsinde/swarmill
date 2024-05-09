@@ -8,6 +8,7 @@ import { trpc } from "@/app/_trpc/client"
 import { useUploadThing } from "@/lib/uploadthing"
 import { Cloud, File, Loader2 } from "lucide-react"
 import { Progress } from "@/components/ui/progress"
+import { MAX_FILE_SIZE_FREE, MAX_FILE_SIZE_PRO } from "@/config/constants"
 
 const variants = {
     base: "relative rounded-md flex flex-col justify-center items-center bg-muted/20 hover:bg-muted/30 border-[1px] border-dashed border-input transition-colors duration-200 ease-in-out cursor-pointer",
@@ -53,6 +54,7 @@ const FileUpload = forwardRef<HTMLInputElement, Props>(({
     dropzoneOptions,
 }: Props, ref) => {
     const router = useRouter();
+    // user's subscription info is present in the data object
     const { data, onClose } = useModalStore();
 
     const { mutate: pollingMutate } = trpc.getFile.useMutation({
@@ -71,6 +73,7 @@ const FileUpload = forwardRef<HTMLInputElement, Props>(({
     const [isUploadError, setIsUploadError] = useState<boolean>(false);
 
     const startSimulatedProgress = () => {
+        // to simulate progress for progress bar
         setUploadProgress(0);
 
         const interval = setInterval(() => {
@@ -100,6 +103,9 @@ const FileUpload = forwardRef<HTMLInputElement, Props>(({
         accept: { "application/pdf": [] },
         multiple: false,
         disabled: disabled || isUploading,
+        onFileDialogOpen: () => {
+            setIsUploadError(false);
+        },
         onDrop: async (acceptedFiles) => {
             // reset is upload error incase
             setIsUploadError(false);
@@ -107,6 +113,7 @@ const FileUpload = forwardRef<HTMLInputElement, Props>(({
 
             const progressInterval = startSimulatedProgress();
 
+            // the upload-thing core will help create the file after uploading it
             const res = await startUpload(acceptedFiles);
 
             if (!res) {
@@ -124,9 +131,13 @@ const FileUpload = forwardRef<HTMLInputElement, Props>(({
             clearInterval(progressInterval);
             setUploadProgress(100);
 
+            // get the file that was created using the key, and redirect user
             pollingMutate({ key: res[0].key });
         },
-        ...dropzoneOptions
+        ...{
+            ...dropzoneOptions,
+            maxSize: data?.isSubscribed ? MAX_FILE_SIZE_PRO : MAX_FILE_SIZE_FREE
+        }
     });
 
     // styling
@@ -157,7 +168,7 @@ const FileUpload = forwardRef<HTMLInputElement, Props>(({
             const { errors } = fileRejections[0];
 
             if (errors[0]?.code === 'file-too-large') {
-                return ERROR_MESSAGES.fileTooLarge(dropzoneOptions?.maxSize ?? 0);
+                return ERROR_MESSAGES.fileTooLarge(dropzoneOptions?.maxSize ?? data?.isSubscribed ? (MAX_FILE_SIZE_PRO * 1024 * 1024) : (MAX_FILE_SIZE_FREE * 1024 * 1024));
             } else if (errors[0]?.code === 'file-invalid-type') {
                 return ERROR_MESSAGES.fileInvalidType();
             } else if (errors[0]?.code === 'too-many-files') {
@@ -170,7 +181,7 @@ const FileUpload = forwardRef<HTMLInputElement, Props>(({
         }
         
         return undefined;
-    }, [fileRejections, dropzoneOptions, isUploadError]);
+    }, [fileRejections, dropzoneOptions, isUploadError, data]);
 
     return (
         <div>
