@@ -21,7 +21,7 @@ export const getURL = () => {
 }
 
 export const constructMetadata = ({
-    title= "Swarmill - Saas for Students, Educators & Researchers",
+    title="Swarmill - Saas for Students, Educators & Researchers",
     description="Swamrill is an open-source software that makes chatting with your PDF files very easy. This can be very useful to speed up research work",
     image="/thumbnail.png",
     icons="favicon.ico",
