@@ -24,7 +24,7 @@ export default function GlobalError({
                     width={300}
                     alt="logo"
                 />
-                <h2 className="mt-1 font-bold text-4xl sm:text-5xl">
+                <h2 className="mt-1 font-bold text-4xl sm:text-5xl text-center">
                     Something went wrong!
                 </h2>
                 <button
